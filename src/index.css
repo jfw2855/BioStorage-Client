@@ -76,3 +76,8 @@
 .form-row {
   margin: 20px;
 }
+
+.auth-error {
+  color: red;
+  font-weight: 600;
+}
