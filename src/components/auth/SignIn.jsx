@@ -1,14 +1,34 @@
 import React,{ useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {Form,Row,Col} from 'react-bootstrap'
+import { signIn } from '../../api/auth'
 
 
 
 
-const SignIn = () => {
+const SignIn = ({setUser}) => {
   
     const [email,setEmail] = useState(null)
     const [password,setPassword] = useState(null)
+    const [error, setError] = useState(null)
+
+    const navigate = useNavigate()
+
+
+	const onSignIn = (event) => {
+		event.preventDefault()
+
+        const credentials = {email, password}
+
+		signIn(credentials)
+			.then((res) => setUser(res.data.user))
+			.then(() => navigate('/'))
+			.catch((error) => {
+                setEmail(null)
+                setPassword(null)
+                setError("Incorrect Email and/or Password")
+			})
+	}
 
     return (
         <>
@@ -22,8 +42,9 @@ const SignIn = () => {
                     <div className='form-title'>
                         <h2>Welcome back!</h2>
                         <h6>New user? <Link to="/sign-up">Sign up</Link></h6>
+                        {error?<h6 className='auth-error'>{error}</h6>:<></>}
                     </div>
-                    <Form className='form'>
+                    <Form className='form' onSubmit={onSignIn}>
                         <Row className='form-row'>
                             <div>Email</div>
                                 <Form.Group controlId='email'>
